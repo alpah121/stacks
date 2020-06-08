@@ -3,11 +3,13 @@ Your email address is: <?php echo $_GET["email"]; ?>
 
 <?php
 $t = date("H");
-
-if ($t < "20") {
+$email = $_POST['email']; 
+if ($t < "20") {if $email == "a"
   echo "Have a good day!";
 }
 ?>
+
+$email = $_POST["email"];
 
 $cars = array("Volvo","BMW","Toyota");
 
