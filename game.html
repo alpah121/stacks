@@ -7,31 +7,38 @@
 
 <script>
 var game = document.getElementById("canvas");
-var house = {
-//creating house
 
-//panels
-'panels' : 
-	[
-	{startPos : {0, 0}, endPos : [0, 0], fillColor : [0, 0, ], strokeColor, hasWindow, hasDoor}
-	],
-//starting location
-
-//section
-
-//rentalIncome
-
-//price
-
-//ownedBy
-
-//isForSale
-
-//isRawLand
-
-//address
-
+function createPanel(position, name, ctx)
+{
+panel = PanelsJSON[name];
+panel(position, ctx);	
 }
+//drawing house
+class House {
+  constructor(detailsData, section) {
+	 var detailsList = [];
+	 for (i = 0; i < detailsList.length; i++)
+		{
+		var listItem = detailsList[i];
+		if (detailsData.hasOwnProperty(listItem))
+			{
+			dataItem = detailsData[listItem];
+			this[listItem] = dataItem;	
+			}
+		}
+  }
+  build(ctx) {
+   //get panels from this
+   var panels = this.panels;
+   for (i = 0; i < panels.length; i++)
+		{
+		var panelName = this.panels[i];
+		createPanel(this.startingLocation, panelName, ctx);
+		}
+  }
+}
+
+new House()
 </script>
 </body>
 </html>
