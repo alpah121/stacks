@@ -8,11 +8,91 @@
 <script>
 var game = document.getElementById("canvas");
 
+var loadedBuildings = {
+
+};
+
+function modal(header, content, buttons)
+{
+document.getElementById("modalHeader").innerHTML = header;
+document.getElementById("modalContent").innerHTML = content;
+footer = "";
+for (i = 0; i < buttons.length; i++)
+{
+  button = buttons[i];
+  footer += "<button class='button' onclick=''"
+}
+document.getElementById("modalHeader").innerHTML = header;
+
+}
+
 function createPanel(position, name, ctx)
 {
 panel = PanelsJSON[name];
-panel(position, ctx);	
+panel(position, ctx);
 }
+//create a building base class
+class Building {
+constructor(detailsData)
+  {
+    var detailsList = [];
+    for (i = 0; i < detailsList.length; i++)
+     {
+     var listItem = detailsList[i];
+     if (detailsData.hasOwnProperty(listItem))
+       {
+       dataItem = detailsData[listItem];
+       this[listItem] = dataItem;
+       }
+     }
+  }
+
+build(parent)
+  {
+
+  }
+
+popup(txt)
+  {
+  if (this.owner != userStats.name && this.isForSale)
+    {
+    var msg = "This house is for sale! \n";
+    msg += "price: " + this.price + "\n";
+    msg += "net income: " + this.rentalIncome + "\n";
+    var buttons = [
+      {'name' : "buy", 'action' : () => {}}
+    ];
+    if (confirm(msg) && userStats.money >= this.price)
+        {
+          buy();
+        }
+    }
+    else {
+      manage();
+    }
+  }
+
+manage()
+  {
+
+  }
+
+buy()
+  {
+
+  }
+
+sell()
+  {
+
+  }
+
+update()
+  {
+
+  }
+}
+
 //drawing house
 class House {
   constructor(detailsData, section) {
@@ -23,7 +103,7 @@ class House {
 		if (detailsData.hasOwnProperty(listItem))
 			{
 			dataItem = detailsData[listItem];
-			this[listItem] = dataItem;	
+			this[listItem] = dataItem;
 			}
 		}
   }
@@ -38,7 +118,18 @@ class House {
   }
 }
 
-new House()
+
+
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("demo").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("GET", "section0.json", true);
+  xhttp.send();
+}
 </script>
 </body>
 </html>

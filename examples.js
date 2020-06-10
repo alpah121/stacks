@@ -58,6 +58,21 @@ var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 ctx.fillStyle = "#FF0000";
 ctx.fillRect(20, 20, 150, 100);
+
+class Confetti {
+  constructor(x, y)
+  {
+  super(x, y);
+  this.name = "bob";
+  }
+
+  update()
+  {
+  super.update();
+  this.r = random(-2, 2);
+  }
+}
+}
 </script>
 </body>
 </html>
