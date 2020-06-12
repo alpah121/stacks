@@ -1,16 +1,7 @@
 [
 {
 'type': "house",
-'mainColor' : [0, 0, 0],
-'trimColor' : [0, 0, 0],
-'panels' : 
-	[
-	"Hpanel0", 
-	"Hdoor1",
-	"Hpanel0"
-	],
 'startingLocation' : [10, 20],
-"section" : 0,
 'rentalIncome': 300,
 'price' : 360000,
 'ownedBy': "Westley Smith",
@@ -22,9 +13,9 @@
 'type': "house",
 'mainColor' : [20, 20, 20],
 'trimColor' : [0, 255, 255],
-'panels' : 
+'panels' :
 	[
-	"panel5", 
+	"panel5",
 	"door1",
 	"panel3"
 	],
@@ -41,9 +32,9 @@
 'type': "house",
 'mainColor' : [0, 0, 0],
 'trimColor' : [0, 0, 0],
-'panels' : 
+'panels' :
 	[
-	"panel5", 
+	"panel5",
 	"door1",
 	"panel3"
 	],
@@ -60,9 +51,9 @@
 'type': "house",
 'mainColor' : [0, 0, 0],
 'trimColor' : [0, 0, 0],
-'panels' : 
+'panels' :
 	[
-	"panel5", 
+	"panel5",
 	"door1",
 	"panel3"
 	],

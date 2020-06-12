@@ -3,8 +3,41 @@
 <title>Game Page</title>
 </head>
 <body>
-<canvas id="canvas"></canvas>
+<link href="css\bootstrap.css" rel="stylesheet"/>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" onclick="loadedBuildings['117'].interact()">
+  House 117
+</button>
 
+<input type="text" id="hoursToPass" /><button type="button" class="btn btn-success" onclick="passTime();">Pass Time</button>
+
+<!-- Modal -->
+<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalHeader">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="modalContent" class="modal-body">
+
+      </div>
+      <div class="modal-footer" id="modalFooter">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="js/jquery.js"></script>
+<script src="js/popper.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="formulas.js"></script>
+<script src="time.js"></script>
 <script>
 var game = document.getElementById("canvas");
 
@@ -12,18 +45,32 @@ var loadedBuildings = {
 
 };
 
+//  {'name' : "buy", 'action' : () => {}}
+var modalButtons;
+var i;
+var dataItem;
+var userStats = {name: "hat smith", money: 1000000};
+var userAssets = {buildings : []};
+
+function buttonClicked(name)
+{
+let clickedButton = modalButtons.filter((button) => {return button.name == name});
+clickedButton[0].action();
+}
+
 function modal(header, content, buttons)
 {
 document.getElementById("modalHeader").innerHTML = header;
 document.getElementById("modalContent").innerHTML = content;
-footer = "";
+modalButtons = buttons;
+mfooter = "";
 for (i = 0; i < buttons.length; i++)
 {
   button = buttons[i];
-  footer += "<button class='button' onclick=''"
+  mfooter += "<button type='button' class='btn btn-primary' title='" + button.name + "' onclick='buttonClicked(this.title)'>" + button.name + "</button>";
 }
-document.getElementById("modalHeader").innerHTML = header;
-
+document.getElementById("modalFooter").innerHTML = mfooter;
+$("#modal").modal();
 }
 
 function createPanel(position, name, ctx)
@@ -35,7 +82,7 @@ panel(position, ctx);
 class Building {
 constructor(detailsData)
   {
-    var detailsList = [];
+    var detailsList = ["type", "startingLocation", "rentalIncome", "price", "ownedBy", "isForSale", "isRawLand", "houseNumber", "downPayment"];
     for (i = 0; i < detailsList.length; i++)
      {
      var listItem = detailsList[i];
@@ -49,42 +96,60 @@ constructor(detailsData)
 
 build(parent)
   {
+  //image is stored in assets/houses/house0.png
+
+  //create image tag
+
+  //position image target
+
+  //add event listener so can click on the buildings
 
   }
 
-popup(txt)
+interact()
   {
-  if (this.owner != userStats.name && this.isForSale)
+  if (this.ownedBy != userStats.name && this.isForSale)
     {
-    var msg = "This house is for sale! \n";
-    msg += "price: " + this.price + "\n";
+    let msg = "price: " + this.price + "\n";
     msg += "net income: " + this.rentalIncome + "\n";
-    var buttons = [
-      {'name' : "buy", 'action' : () => {}}
+    let buttons = [
+      {'name' : "buy", 'action' : () => {let building = loadedBuildings[this.houseNumber]; building.buy();}}
     ];
-    if (confirm(msg) && userStats.money >= this.price)
-        {
-          buy();
-        }
+    modal("This house is for sale!", msg, buttons)
     }
     else {
-      manage();
+      this.manage();
     }
   }
 
 manage()
   {
-
+  let msg = "You own this building <br/>";
+  msg += "down payment: " + this.downPayment + "<br/>";
+  msg += "annual percentage rate: 7% <br/>";
+  let buttons = [
+    {'name' : "sell", 'action' : () => {let building = loadedBuildings[this.houseNumber]; building.sell();}}
+    ];
+  modal("Manage Building", msg, buttons);
   }
 
 buy()
   {
-
+  console.log(this.downPayment);
+  if (userStats.money >= this.downPayment && this.ownedBy != userStats.name && this.isForSale)
+    {
+    console.log("you have the money.");
+    userStats.money -= this.downPayment;
+    this.ownedBy = userStats.name;
+    userAssets.buildings.push(this.houseNumber);
+    this.mortgage = this.price - this.downPayment;
+    this.payment = Math.floor(mortgagePayment(this.mortgage, 30, .07));
+    }
   }
 
 sell()
   {
-
+  window.alert("it works!");
   }
 
 update()
@@ -93,7 +158,7 @@ update()
   }
 }
 
-//drawing house
+/*drawing house
 class House {
   constructor(detailsData, section) {
 	 var detailsList = [];
@@ -118,18 +183,43 @@ class House {
   }
 }
 
+*/
 
-
-function loadDoc() {
+function loadSection() {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("demo").innerHTML = this.responseText;
+      var json = JSON.parse(this.responseText);
+      //Building(detailsData)
+      loadedBuildings.push(json[0]);
     }
   };
   xhttp.open("GET", "section0.json", true);
   xhttp.send();
 }
+
+//loadSection();
+details = {
+'type': "house",
+'startingLocation' : [10, 20],
+'rentalIncome': 300,
+'price' : 360000,
+'downPayment' : 10800,
+'ownedBy': "Westley Smith",
+'isForSale': true,
+'isRawLand' : false,
+'houseNumber' : "117"
+};
+loadedBuildings["117"] = new Building(details);
+
+//test out formulas here
+let price = 100000;
+let payment = Math.floor(mortgagePayment(price - 10800, 30, .07));
+let amortization = amortizationSchedule(payment, price - 10800, .07);
+let month = 10 - 1;
+let sell = appreciation(price, .02, month) - amortization[month].leftover ;
+
+//window.alert("you would get " + Math.floor(sell) + " leftover " + amortization[month].leftover + " and the principal is " + amortization[month].principal);
 </script>
 </body>
 </html>
