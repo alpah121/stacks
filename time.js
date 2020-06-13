@@ -35,3 +35,13 @@ if (amount > 0)
   subtractTime(amount);
   }
 }
+
+function monthsPassed(fromTime)
+{
+let timePassed = fromTime - countdown;
+if (timePassed > 0)
+  {
+  return Math.floor(timePassed/96);
+  }
+else {return 0;}
+}

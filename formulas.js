@@ -39,5 +39,18 @@ return loan * (p1/p2);
 function appreciation(price, yearlyRate, months)
 {
 let monthlyRate = yearlyRate/12;
-return price * (1 + (monthlyRate * months));  
+return price * (1 + Math.pow(monthlyRate, months));
+}
+
+function youGetForSelling(price, downPayment, whenBought)
+{
+let mortgage = price - downPayment;
+let payment = mortgagePayment(mortgage, 30, 0.07);
+let amortization = amortizationSchedule(payment, mortgage, 0.07);
+let months = monthsPassed(whenBought);
+let leftover = amortization[months].leftover;
+let youGet = appreciation(price, .02, month) - leftover;
+youGet *= 0.94;
+youGet -= 500;
+return Math.floor(youGet);
 }

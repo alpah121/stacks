@@ -4,6 +4,30 @@
 </head>
 <body>
 <link href="css\bootstrap.css" rel="stylesheet"/>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">Navbar</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Features</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" id="money">Money goes here...</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link disabled" href="#" id="timer">Time goes here...</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-primary" onclick="loadedBuildings['117'].interact()">
   House 117
@@ -124,9 +148,9 @@ interact()
 
 manage()
   {
-  let msg = "You own this building <br/>";
-  msg += "down payment: " + this.downPayment + "<br/>";
-  msg += "annual percentage rate: 7% <br/>";
+  let msg = "You owned this building since " + this.whenBought + "<br/>";
+  msg += "Rental Income: " + this.rentalIncome + "<br/>";
+  msg += "You would get: " + youGetForSelling(this.price, this.downPayment, this.whenBought) + " if you sold<br/>";
   let buttons = [
     {'name' : "sell", 'action' : () => {let building = loadedBuildings[this.houseNumber]; building.sell();}}
     ];
@@ -135,21 +159,24 @@ manage()
 
 buy()
   {
-  console.log(this.downPayment);
   if (userStats.money >= this.downPayment && this.ownedBy != userStats.name && this.isForSale)
     {
-    console.log("you have the money.");
     userStats.money -= this.downPayment;
     this.ownedBy = userStats.name;
     userAssets.buildings.push(this.houseNumber);
     this.mortgage = this.price - this.downPayment;
     this.payment = Math.floor(mortgagePayment(this.mortgage, 30, .07));
+    this.whenBought = countdown;
     }
   }
 
 sell()
   {
-  window.alert("it works!");
+  if (this.ownedBy == userStats.name)
+    {
+    userStats.money += youGetForSelling(this.price, this.downPayment, this.whenBought);
+    userAssets.buildings = userAssets.buildings.filter((asset) => {return asset.houseNumber != name});
+    }
   }
 
 update()
@@ -217,7 +244,7 @@ let price = 100000;
 let payment = Math.floor(mortgagePayment(price - 10800, 30, .07));
 let amortization = amortizationSchedule(payment, price - 10800, .07);
 let month = 10 - 1;
-let sell = appreciation(price, .02, month) - amortization[month].leftover ;
+let sell = appreciation(price, .02, month) - amortization[month].leftover;
 
 //window.alert("you would get " + Math.floor(sell) + " leftover " + amortization[month].leftover + " and the principal is " + amortization[month].principal);
 </script>
